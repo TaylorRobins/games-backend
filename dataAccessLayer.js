@@ -8,13 +8,13 @@ require("dotenv").config();
 const url = process.env.MONGODB_URL;
 const databaseName = process.env.MONGODB_DATABASE;
 
-const collectionName = "posts";
+const collectionName = "games";
 const settings = {
   useUnifiedTopology: true,
 };
 
 let databaseClient;
-let postCollection;
+let gameCollection;
 
 const connect = function () {
   return new Promise((resolve, reject) => {
@@ -26,16 +26,16 @@ const connect = function () {
       }
 
       databaseClient = client.db(databaseName);
-      postCollection = databaseClient.collection(collectionName);
+      gameCollection = databaseClient.collection(collectionName);
       console.log("SUCCESSFULLY CONNECTED TO DATABASE!");
       resolve();
     });
   });
 };
 
-const insertOne = function (post) {
+const insertOne = function (game) {
   return new Promise((resolve, reject) => {
-    postCollection.insertOne(post, (error, result) => {
+    gameCollection.insertOne(game, (error, result) => {
       if (error) {
         console.log(error);
         reject(error);
@@ -52,7 +52,7 @@ const findAll = function () {
   const query = {};
 
   return new Promise((resolve, reject) => {
-    postCollection.find(query).toArray((error, documents) => {
+    gameCollection.find(query).toArray((error, documents) => {
       if (error) {
         console.log(error);
         reject(error);
@@ -67,7 +67,7 @@ const findAll = function () {
 
 const findOne = function (query) {
   return new Promise((resolve, reject) => {
-    postCollection.find(query).toArray((error, documents) => {
+    gameCollection.find(query).toArray((error, documents) => {
       if (error) {
         console.log(error);
         reject(error);
@@ -85,27 +85,23 @@ const findOne = function (query) {
   });
 };
 
-const updateOne = function (query, newPost) {
-  const newPostQuery = {};
+const updateOne = function (query, newGame) {
+  const newGameQuery = {};
 
-  if (newPost.platform) {
-    newPostQuery.platform = newPost.platform;
+  if (newGame.game) {
+    newGameQuery.game = newGame.game;
   }
 
-  if (newPost.game) {
-    newPostQuery.game = newPost.game;
+  if (newGame.genre) {
+    newGameQuery.game = newPost.genre;
   }
 
-  if (newPost.info) {
-    newPostQuery.info = newPost.info;
-  }
-
-  if (newPost.notes) {
-    newPostQuery.notes = newPost.notes;
+  if (newGame.publisher) {
+    newGameQuery.publisher = newGame.publisher;
   }
 
   return new Promise((resolve, reject) => {
-    postCollection.updateOne(query, { $set: newPostQuery }, (error, result) => {
+    gameCollection.updateOne(query, { $set: newGameQuery }, (error, result) => {
       if (error) {
         console.log(error);
         reject(error);
@@ -123,7 +119,7 @@ const updateOne = function (query, newPost) {
 
 const deleteOne = function (query) {
   return new Promise((resolve, reject) => {
-    postCollection.deleteOne(query, (error, result) => {
+    gameCollection.deleteOne(query, (error, result) => {
       if (error) {
         console.log(error);
         reject(error);
